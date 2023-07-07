@@ -15,7 +15,6 @@ import {
 } from "react-native-heroicons/solid";
 import {
   categories,
-  foodItems,
   VeganBurgers,
   chickenBurgers,
   porkBurgers,
