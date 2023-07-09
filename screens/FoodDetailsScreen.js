@@ -22,6 +22,7 @@ export default function FoodDetailsScreen(props) {
   const [favoriteModalVisible, setFavoriteModalVisible] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [deliveryTime, setDeliveryTime] = useState(15);
+  const [voteCount, setVoteCount] = useState(450);
 
   const handleMinusPress = () => {
     if (count > 1) {
@@ -39,12 +40,19 @@ export default function FoodDetailsScreen(props) {
     // Aquí puedes implementar la lógica para agregar el item al carrito
     // Puedes usar el valor de `counter` y `item` para realizar la acción correspondiente
     // Por ejemplo, puedes almacenar el item y la cantidad en el estado global o enviarlos a una API
-    console.log(`Agregando al carrito: ${counter} x ${item.name}`);
+    console.log(`Agregando al carrito: ${count} x ${item.name}`);
     setCartModalVisible(true); // Muestra el modal al agregar al carrito
   };
+
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
     setFavoriteModalVisible(!isFavorite);
+    // Suma o resta los votos según el valor actual de isFavorite
+    if (isFavorite) {
+      setVoteCount(voteCount - 1);
+    } else {
+      setVoteCount(voteCount + 1);
+    }
   };
   return (
     <View className="flex-1 bg-white">
@@ -125,7 +133,9 @@ export default function FoodDetailsScreen(props) {
               source={require("../assets/icons/chat.png")}
               className="h-6 w-6"
             />
-            <Text className="font-semibold">4.6 vote</Text>
+            <Text className="font-semibold">
+              {voteCount.toFixed()} <Text>K</Text>
+            </Text>
           </Animatable.View>
           <Animatable.View
             delay={480}
