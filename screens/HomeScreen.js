@@ -5,6 +5,8 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Modal,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,6 +20,7 @@ import {
   VeganBurgers,
   chickenBurgers,
   porkBurgers,
+  foodItems,
   specialBurgers,
 } from "../constants";
 import * as Animatable from "react-native-animatable";
@@ -26,6 +29,12 @@ import FoodCard from "../components/FoodCard";
 export default function HomeScreen() {
   const [activeCategory, setActiveCategory] = useState("Burger");
   const [searchText, setSearchText] = useState("");
+  const [orderModalVisible, setOrderModalVisible] = useState(false);
+  const [lastOrders, setLastOrders] = useState([
+    { name: "Hamburguesa 1", id: 1 },
+    { name: "Hamburguesa 2", id: 2 },
+    { name: "Hamburguesa 3", id: 3 },
+  ]);
 
   const getActiveCategoryItems = () => {
     if (activeCategory === "Veganas") {
@@ -39,12 +48,25 @@ export default function HomeScreen() {
     } else if (activeCategory === "Especiales") {
       return specialBurgers;
     }
-    // Si la categoría activa no coincide con ninguna opción, se puede devolver un array vacío o un mensaje de error, según sea necesario.
     return [];
   };
+
   const filteredItems = getActiveCategoryItems().filter((item) =>
     item.name.toLowerCase().includes(searchText.toLowerCase())
   );
+
+  const handleOrderPress = (item) => {
+    console.log(`Ver detalles de pedido: ${item.name}`);
+    // Aquí puedes navegar a la pantalla de detalles de la hamburguesa correspondiente
+  };
+  const openOrderModal = () => {
+    setOrderModalVisible(true);
+  };
+
+  const closeOrderModal = () => {
+    setOrderModalVisible(false);
+  };
+
   return (
     <View className="flex-1 relative">
       <Image
@@ -79,14 +101,19 @@ export default function HomeScreen() {
           <View className="flex-row flex-1 p-4 bg-white rounded-2xl">
             <MagnifyingGlassIcon stroke={40} color="gray" />
             <TextInput
-              placeholder="Food"
+              placeholder="Search"
               value={searchText}
               onChangeText={(text) => setSearchText(text)}
               className="ml-2 text-gray-800"
             />
           </View>
-          <View className="bg-white rounded-2xl p-4">
-            <AdjustmentsHorizontalIcon size="25" stroke={40} color="black" />
+          <View className="bg-white rounded-2xl p-2">
+            <TouchableOpacity
+              onPress={openOrderModal}
+              className="bg-white rounded-2xl p-2"
+            >
+              <AdjustmentsHorizontalIcon size="25" stroke={40} color="black" />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -139,6 +166,35 @@ export default function HomeScreen() {
             <FoodCard item={item} index={index} key={index.id} />
           ))}
         </ScrollView>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={orderModalVisible}
+          onRequestClose={() => setOrderModalVisible(false)}
+        >
+          <View className="flex-1 justify-center align-center bg-gray-900 bg-opacity-50">
+            <View className="bg-white p-4 mx-4 rounded-lg">
+              <Text className="text-lg font-bold mb-2">Últimos pedidos</Text>
+              {lastOrders.map((order) => (
+                <TouchableOpacity
+                  key={order.id}
+                  onPress={() => handleOrderPress(order)}
+                  className="flex-row justify-between items-center mb-2"
+                >
+                  <Text>{order.name}</Text>
+                  <Text>Detalles</Text>
+                </TouchableOpacity>
+              ))}
+              <Pressable
+                onPress={closeOrderModal}
+                className="bg-gray-800 p-3 mt-6 rounded-2xl"
+              >
+                <Text className="text-white text-lg text-center">Cerrar</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </View>
   );
