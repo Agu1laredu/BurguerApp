@@ -31,10 +31,27 @@ export default function HomeScreen() {
   const [searchText, setSearchText] = useState("");
   const [orderModalVisible, setOrderModalVisible] = useState(false);
   const [lastOrders, setLastOrders] = useState([
-    { name: "Hamburguesa 1", id: 1 },
-    { name: "Hamburguesa 2", id: 2 },
-    { name: "Hamburguesa 3", id: 3 },
+    {
+      name: "InfernoBurger 1",
+      ingredients: "Carne de Cerdo, chiles habaneros, queso picante",
+      desc: "Prepara tus papilas gustativas para un viaje al infierno de los sabores con nuestra InfernoBurger. Esta hamburguesa jugosa combina carne de res de primera calidad con chiles habaneros intensamente picantes y queso fundido con un toque de picor. ¡Advertencia: solo para los valientes amantes del picante!",
+      Dirección: "Casa",
+    },
+    {
+      name: "Mushroom Burger",
+      ingredients: "Hongos, nueces, cebolla caramelizada",
+      desc: "La Mushroom Burger es perfecta para los amantes de los hongos. Preparada con una mezcla de hongos, nueces y cebolla caramelizada, esta hamburguesa vegana tiene un sabor umami intenso y una textura satisfactoria. ¡Una opción sabrosa y reconfortante!",
+      Dirección: "Casa",
+    },
+    {
+      name: "Spicy Chicken Burger",
+      ingredients: "Pechuga de pollo, salsa picante, queso derretido",
+      desc: "La Spicy Chicken Burger es perfecta para los amantes del picante. Con una pechuga de pollo tierna y jugosa, salsa picante y queso derretido, esta hamburguesa de pollo te brindará un estallido de sabores audaz y picante. ¡Prepárate para un sabor intenso y delicioso!",
+      Dirección: "Casa de abuelos",
+    },
   ]);
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState({});
 
   const getActiveCategoryItems = () => {
     if (activeCategory === "Veganas") {
@@ -55,10 +72,11 @@ export default function HomeScreen() {
     item.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const handleOrderPress = (item) => {
-    console.log(`Ver detalles de pedido: ${item.name}`);
-    // Aquí puedes navegar a la pantalla de detalles de la hamburguesa correspondiente
+  const handleOrderDetails = (order) => {
+    setSelectedOrder(order);
+    setDetailModalVisible(true);
   };
+
   const openOrderModal = () => {
     setOrderModalVisible(true);
   };
@@ -173,22 +191,68 @@ export default function HomeScreen() {
           visible={orderModalVisible}
           onRequestClose={() => setOrderModalVisible(false)}
         >
-          <View className="flex-1 justify-center align-center bg-gray-900 bg-opacity-50">
+          <View className="flex-1 justify-center align-center ">
             <View className="bg-white p-4 mx-4 rounded-lg">
-              <Text className="text-lg font-bold mb-2">Últimos pedidos</Text>
-              {lastOrders.map((order) => (
+              <Text className="text-lg font-bold mb-2" style={{ fontSize: 21 }}>
+                Últimos pedidos
+              </Text>
+              {lastOrders.map((order, index) => (
                 <TouchableOpacity
-                  key={order.id}
-                  onPress={() => handleOrderPress(order)}
+                  key={index.id}
                   className="flex-row justify-between items-center mb-2"
                 >
-                  <Text>{order.name}</Text>
-                  <Text>Detalles</Text>
+                  <Text className="text-lg mt-6" style={{ fontSize: 21 }}>
+                    {order.name}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => handleOrderDetails(order)}
+                    className="bg-gray-800 p-3 mt-6 rounded-2xl"
+                  >
+                    <Text className="text-white text-lg text-center">
+                      Detalles
+                    </Text>
+                  </TouchableOpacity>
                 </TouchableOpacity>
               ))}
               <Pressable
                 onPress={closeOrderModal}
                 className="bg-gray-800 p-3 mt-6 rounded-2xl"
+              >
+                <Text className="text-white text-lg text-center">Cerrar</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={detailModalVisible}
+          onRequestClose={() => setDetailModalVisible(false)}
+        >
+          <View className="flex-1 justify-center align-center  ">
+            <View
+              className="bg-white p-4 mx-4 rounded-lg"
+              style={{ height: 400 }}
+            >
+              <Text
+                className="text-lg font-bold mb-2   align-center"
+                style={{ fontSize: 30, margin: "auto", textAlign: "center" }}
+              >
+                Detalle del pedido
+              </Text>
+              <View style={{ marginTop: 50 }}>
+                <Text className="text-lg font-bold mb-2">Nombre:</Text>
+                <Text>{selectedOrder.name}</Text>
+                <Text className="text-lg font-bold mb-2">Ingredientes:</Text>
+                <Text>{selectedOrder.ingredients}</Text>
+                <Text className="text-lg font-bold mb-2">Dirección:</Text>
+                <Text>{selectedOrder.Dirección}</Text>
+              </View>
+              {/* Agrega aquí cualquier otro detalle que desees mostrar */}
+              <Pressable
+                onPress={() => setDetailModalVisible(false)}
+                className="bg-gray-800 p-3 mt-6 rounded-2xl"
+                style={{ marginTop: 50 }}
               >
                 <Text className="text-white text-lg text-center">Cerrar</Text>
               </Pressable>
