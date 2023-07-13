@@ -17,7 +17,7 @@ export default function FoodDetailsScreen(props) {
   let item = props.route.params;
   const navigation = useNavigation();
 
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(0);
   const [cartModalVisible, setCartModalVisible] = useState(false);
   const [favoriteModalVisible, setFavoriteModalVisible] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);

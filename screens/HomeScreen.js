@@ -15,6 +15,7 @@ import {
   Bars3CenterLeftIcon,
   MagnifyingGlassIcon,
 } from "react-native-heroicons/solid";
+import { useNavigation } from "@react-navigation/native";
 import {
   categories,
   VeganBurgers,
@@ -27,6 +28,7 @@ import * as Animatable from "react-native-animatable";
 import FoodCard from "../components/FoodCard";
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   const [activeCategory, setActiveCategory] = useState("Burger");
   const [searchText, setSearchText] = useState("");
   const [orderModalVisible, setOrderModalVisible] = useState(false);
@@ -94,17 +96,27 @@ export default function HomeScreen() {
       />
       <SafeAreaView className="flex-1">
         <View className="flex-row justify-between items-center mx-4">
-          <View className="bg-white shadow-md rounded-2xl p-3">
-            <Bars3CenterLeftIcon size="25" stroke={100} color="black" />
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("userDetails")}
+            className="bg-white rounded-2xl p-3"
+          >
+            <Bars3CenterLeftIcon size={25} stroke={100} color="black" />
+          </TouchableOpacity>
           <View
-            className="rounded-2xl"
-            style={{ backgroundColor: "rgba(255,255,255,0.7)", padding: 3 }}
+            style={{
+              backgroundColor: "rgba(255,255,255,0.7)",
+              borderRadius: 999,
+              padding: 3,
+            }}
           >
             <Image
-              className="h-12 w-12 rounded-2xl"
               source={require("../assets/images/avatar.png")}
-              style={{ backgroundColor: "rgba(255,255,255,0.7)" }}
+              style={{
+                height: 48,
+                width: 48,
+                borderRadius: 999,
+                backgroundColor: "rgba(255,255,255,0.7)",
+              }}
             />
           </View>
         </View>
